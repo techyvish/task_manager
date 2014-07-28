@@ -1,11 +1,12 @@
 task_manager
 ============
 
-** RestFUL APIs for task manager App ** 
+_RestFUL APIs for task manager App_ 
 
 Back-end for taskmanager App writtend in PHP.
 
-** Table creation for storing tasks **
+_Table creation for storing tasks_
+
 ```sql
 
 CREATE DATABASE task_manager;
