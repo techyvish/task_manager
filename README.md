@@ -6,7 +6,8 @@ task_manager
 Back-end for taskmanager App writtend in PHP.
 
 ** Table creation for storing tasks **
-```
+```sql
+
 CREATE DATABASE task_manager;
 
 USE task_manager;
