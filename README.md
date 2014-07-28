@@ -1,11 +1,18 @@
-task_manager
+
+
+Task Manager
 ============
 
-_RestFUL APIs for task manager App_ 
+RestFUL APIs for task manager App
+---------------------------------
 
-Back-end for taskmanager App writtend in PHP.
+> Back-end for taskmanager App writtend in PHP.
 
-_Table creation for storing tasks_
+Table creation for storing tasks
+--------------------------------
+
+![enter image description here][1]
+
 
 ```sql
 
@@ -50,3 +57,30 @@ ALTER TABLE  `user_tasks` ADD FOREIGN KEY (  `task_id` ) REFERENCES  `task_manag
 `id`
 ) ON DELETE CASCADE ON UPDATE CASCADE ;
 ```
+
+APIs
+----
+
+
+| URL           | Method        | Parameters    | Description  |
+| ------------- |-------------  | ------------- | -------------|
+| /register |	POST|	name, email, password|	User registration|
+|/login|	POST|	email, password	User |login
+|/tasks	|POST|	task|	To create new task
+|/tasks	|GET	|	Fetching all| tasks
+|/tasks/:id|	GET	|	Fetching single |task
+|/tasks/:id|	PUT	|	Updating single |task
+|/tasks/:id|	DELETE|	task, status	|Deleting single task
+
+
+
+How to setup
+------------
+
+1. Install MAMP on your mac.
+2. Turn on the server.
+2. Download and add this repo to htdocs folder.
+3. Test APIs using any rest client.
+
+
+  [1]: http://www.androidhive.info/wp-content/uploads/2014/01/android-task-manager-rest-api-database.jpg?0921ab
