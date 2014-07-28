@@ -6,7 +6,7 @@ task_manager
 Back-end for taskmanager App writtend in PHP.
 
 ** Table creation for storing tasks **
-
+```
 CREATE DATABASE task_manager;
 
 USE task_manager;
@@ -47,3 +47,4 @@ ALTER TABLE  `user_tasks` ADD FOREIGN KEY (  `user_id` ) REFERENCES  `task_manag
 ALTER TABLE  `user_tasks` ADD FOREIGN KEY (  `task_id` ) REFERENCES  `task_manager`.`tasks` (
 `id`
 ) ON DELETE CASCADE ON UPDATE CASCADE ;
+```
