@@ -6,7 +6,6 @@
  * @author Vishal Patel
  */
 
-require_once('config.php');
 
 class DbConnect {
 
@@ -20,7 +19,7 @@ class DbConnect {
      * @return database connection handler
      */
     function connect() {
-        //include_once dirname(__FILE__) . './config.php';
+        include_once dirname(__FILE__) . '/config.php';
 
         // Connecting to mysql database
         $this->conn = new mysqli(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
