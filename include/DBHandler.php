@@ -17,12 +17,11 @@ class DBHandler
 
     function __construct()
     {
-        var_dump(dirname(__FILE__) . '/DBConnect.php');
-        require_once dirname(__FILE__) . '/DBConnect.php';
+        //var_dump(dirname(__FILE__) . '/DBConnect.php');
+        //require_once dirname(__FILE__) . '/DBConnect.php';
 
         $db = new DbConnect();
         $this->conn = $db->connect();
-
 
         $this->database = new medoo([
             // required
@@ -54,20 +53,20 @@ class DBHandler
 
     public function createUser($name, $email, $password)
     {
-        $response_arr = array();
-
         if (!$this->isUserExist($email)) {
+
             $password_hash = $password;
             $api_key = $this->generateApiKey();
-            $stmt = $this->conn->prepare("INSERT INTO users(name,email,password_hash,api_key,status) values ( ?,?,?,?,1)");
-            $stmt->bind_param("ssss", $name, $email, $password_hash, $api_key);
 
-            $result = $stmt->execute();
+            $last_user_id = $this->database->insert("users", [
+                "name" => $name,
+                "email" => $email,
+                "password_hash" => $password_hash,
+                "api_key" => $api_key,
+                "status" => 1
+            ]);
 
-            $stmt->close();
-
-            // Check for successful insertion
-            if ($result) {
+            if ($last_user_id != false) {
                 // User successfully inserted
                 return USER_CREATED_SUCCESSFULLY;
             } else {
@@ -78,8 +77,7 @@ class DBHandler
             // User with same email already existed in the db
             return USER_ALREADY_EXISTED;
         }
-
-        return $response;
+        return USER_CREATE_FAILED;
     }
 
     /**
@@ -89,13 +87,13 @@ class DBHandler
      */
     private function isUserExist($email)
     {
-        $stmt = $this->conn->prepare("SELECT id from users WHERE email = ?");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $stmt->store_result();
-        $num_rows = $stmt->num_rows;
-        $stmt->close();
-        return $num_rows > 0;
+        $name = NULL;
+        $name = $this->database->get("users", "name", ["email" => $email]);
+        if ($name != FALSE) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
     }
 
     /**
@@ -109,26 +107,16 @@ class DBHandler
     public function  checkLogin($email, $password)
     {
         $password_hash = NULL;
-        $stmt = $this->conn->prepare("SELECT password_hash FROM users WHERE email = ?");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $stmt->bind_result($password_hash);
-        $stmt->store_result();
-
-        if ($stmt->num_rows > 0) {
-            $stmt->fetch();
-            $stmt->close();
-
+        $password_hash = $this->database->get("users", "password_hash", ["email" => $email]);
+        if ($password_hash != FALSE) {
             if (($password == $password_hash)) {
                 return TRUE;
             } else {
                 return FALSE;
             }
         } else {
-            $stmt->close();
             return FALSE;
         }
-
     }
 
     public function  getUserByEmail($email)
@@ -254,7 +242,7 @@ class DBHandler
     }
 }
 
-$handler = new DBHandler();
+//$handler = new DBHandler();
 //$handler->createUser('test.user','test.user@gmail.com','test123');
 //$handler->checkLogin('test.user@gmail.com','test123');
 //$handler->getUserByEmail('vis8051@gmail.com');

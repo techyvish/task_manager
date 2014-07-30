@@ -1,6 +1,11 @@
 <?php
 
 require '../Slim/Slim.php';
+require '../include/DBHandler.php';
+require '../include/DBConnect.php';
+require '../include/PassHash.php';
+
+
 \Slim\Slim::registerAutoloader();
 
 $app = new \Slim\Slim();
@@ -16,7 +21,7 @@ function verifyRequiredParams($required_fields) {
     $error_fields = "";
     $request_params = $_REQUEST;
     // Handling PUT request params
-    echo($_REQUEST);
+   // echo($_REQUEST);
 
 
     if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
