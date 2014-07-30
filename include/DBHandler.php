@@ -9,10 +9,11 @@
 require 'medoo.php';
 
 
-class DBHandler {
+class DBHandler
+{
 
-    private  $conn;
-    private  $database;
+    private $conn;
+    private $database;
 
     function __construct()
     {
@@ -51,12 +52,11 @@ class DBHandler {
      * @return int
      */
 
-    public  function createUser($name,$email,$password)
+    public function createUser($name, $email, $password)
     {
         $response_arr = array();
 
-        if ( !$this->isUserExist($email))
-        {
+        if (!$this->isUserExist($email)) {
             $password_hash = $password;
             $api_key = $this->generateApiKey();
             $stmt = $this->conn->prepare("INSERT INTO users(name,email,password_hash,api_key,status) values ( ?,?,?,?,1)");
@@ -87,7 +87,8 @@ class DBHandler {
      * @param String $email email to check in db
      * @return boolean
      */
-    private function isUserExist($email) {
+    private function isUserExist($email)
+    {
         $stmt = $this->conn->prepare("SELECT id from users WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
@@ -100,51 +101,43 @@ class DBHandler {
     /**
      * Generating random Unique MD5 String for user Api key
      */
-    private function generateApiKey() {
+    private function generateApiKey()
+    {
         return md5(uniqid(rand(), true));
     }
 
-    public  function  checkLogin($email,$password)
+    public function  checkLogin($email, $password)
     {
         $password_hash = NULL;
         $stmt = $this->conn->prepare("SELECT password_hash FROM users WHERE email = ?");
-        $stmt->bind_param("s",$email);
+        $stmt->bind_param("s", $email);
         $stmt->execute();
         $stmt->bind_result($password_hash);
         $stmt->store_result();
 
-        if ( $stmt->num_rows > 0)
-        {
+        if ($stmt->num_rows > 0) {
             $stmt->fetch();
             $stmt->close();
 
-            if ( ($password == $password_hash))
-            {
+            if (($password == $password_hash)) {
                 return TRUE;
-            }
-            else
-            {
+            } else {
                 return FALSE;
             }
-        }
-        else
-        {
+        } else {
             $stmt->close();
             return FALSE;
         }
 
     }
 
-    public  function  getUserByEmail($email)
+    public function  getUserByEmail($email)
     {
         $name = NULL;
-        $name = $this->database->get("users","name",["email" => $email]);
-        if ( $name != FALSE )
-        {
+        $name = $this->database->get("users", "name", ["email" => $email]);
+        if ($name != FALSE) {
             return $name;
-        }
-        else
-        {
+        } else {
             return NULL;
         }
     }
@@ -152,13 +145,10 @@ class DBHandler {
     public function getApiKeyById($user_id)
     {
         $api_key = NULL;
-        $api_key = $this->database->get("users","api_key",["id" => $user_id]);
-        if ( $api_key != FALSE )
-        {
+        $api_key = $this->database->get("users", "api_key", ["id" => $user_id]);
+        if ($api_key != FALSE) {
             return $api_key;
-        }
-        else
-        {
+        } else {
             return NULL;
         }
     }
@@ -166,13 +156,10 @@ class DBHandler {
     public function getUserId($api_key)
     {
         $user_id = NULL;
-        $user_id = $this->database->get("users","id",["api_key" => $api_key]);
-        if ( $user_id != FALSE )
-        {
+        $user_id = $this->database->get("users", "id", ["api_key" => $api_key]);
+        if ($user_id != FALSE) {
             return $user_id;
-        }
-        else
-        {
+        } else {
             return NULL;
         }
     }
@@ -180,48 +167,39 @@ class DBHandler {
     public function isValidApiKey($api_key)
     {
         $user_id = NULL;
-        $user_id = $this->database->get("users","id",["api_key" => $api_key]);
-        if ( $user_id != FALSE )
-        {
+        $user_id = $this->database->get("users", "id", ["api_key" => $api_key]);
+        if ($user_id != FALSE) {
             return TRUE;
-        }
-        else
-        {
+        } else {
             return FALSE;
         }
     }
 
-    public  function createTask($user_id,$task)
+    public function createTask($user_id, $task)
     {
         $task_id = NULL;
         $this->database->insert("tasks",
-                                 ["task" => $task]);
+            ["task" => $task]);
 
-        $task_id = $this->database->get("tasks","id",["task"=>$task]);
+        $task_id = $this->database->get("tasks", "id", ["task" => $task]);
 
-        if ( $task_id != FALSE )
-        {
-            $name = $this->database->get("users","name",["id"=>$user_id]);
-             if ( $name != FALSE )
-             {
-                 $this->database->insert("user_tasks",
-                                    ["user_id" => $user_id,
-                                     "task_id" => $task_id]);
-                 return $task_id;
-             }
-             else
-             {
-                 return NULL;
-             }
-        }
-        else
-        {
+        if ($task_id != FALSE) {
+            $name = $this->database->get("users", "name", ["id" => $user_id]);
+            if ($name != FALSE) {
+                $this->database->insert("user_tasks",
+                    ["user_id" => $user_id,
+                        "task_id" => $task_id]);
+                return $task_id;
+            } else {
+                return NULL;
+            }
+        } else {
             var_dump("created task not found");
             return NULL;
         }
     }
 
-    public function getTask($task_number,$user_id)
+    public function getTask($task_number, $user_id)
     {
         /*  Query :
          *  SELECT *
@@ -233,28 +211,46 @@ class DBHandler {
  	        `tasks`.`id` = 1
          */
 
-         $result = $this->database->select("tasks", [
-                                                      "[>]user_tasks" => ["id" => "task_id"]],
+        $result = $this->database->select("tasks", [
+                "[>]user_tasks" => ["id" => "task_id"]],
 
-                                                       ["tasks.id",
-                                                        "tasks.status",
-                                                        "tasks.task",
-                                                        "tasks.created_at"],
+            ["tasks.id",
+                "tasks.status",
+                "tasks.task",
+                "tasks.created_at"],
 
-                                                        ["AND" =>
-                                                        ["user_tasks.user_id" => 1,
-                                                        "tasks.id" => 1]]);
+            ["AND" =>
+                ["user_tasks.user_id" => $user_id,
+                    "tasks.id" => $task_number]]);
 
 
-         if ( $result != NULL )
-         {
-             var_dump($result[0]["task"]);
-             return $result[0]["task"];
-         }
-         else
-         {
+        if ($result != NULL) {
+            var_dump($result[0]["task"]);
+            return $result[0]["task"];
+        } else {
             return NULL;
-         }
+        }
+    }
+
+    public function  getAllUserTasks($user_id)
+    {
+        $result = $this->database->select("tasks", [
+                "[>]user_tasks" => ["id" => "task_id"]],
+
+            ["tasks.id",
+                "tasks.status",
+                "tasks.task",
+                "tasks.created_at"],
+
+            ["AND" =>
+                ["user_tasks.user_id" => $user_id]]);
+
+        if ($result != NULL) {
+            var_dump($result[0]);
+            return $result[0];
+        } else {
+            return NULL;
+        }
     }
 }
 
@@ -267,3 +263,4 @@ $handler = new DBHandler();
 //$handler->isValidApiKey("d3de848e17b474ef2965301d3b9ba817");
 //$handler->createTask(1,"Get Milk");
 //$handler->getTask(1,1);
+//$handler->getAllUserTasks(1);

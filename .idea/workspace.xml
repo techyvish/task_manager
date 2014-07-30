@@ -62,12 +62,12 @@
       <file leaf-file-name="DBHandler.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/include/DBHandler.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="226" column="19" selection-start="5636" selection-end="5636" vertical-scroll-proportion="-0.62566847" vertical-offset="4645" max-vertical-offset="5206">
+            <state line="244" column="21" selection-start="6423" selection-end="6423" vertical-scroll-proportion="0.0855615" vertical-offset="4588" max-vertical-offset="5149">
               <folding>
                 <element signature="e#6#90#0" expanded="true" />
-                <marker date="1406693752000" expanded="true" signature="1505:1583" placeholder="INSERT INTO ..." />
-                <marker date="1406693752000" expanded="true" signature="2411:2447" placeholder="SELECT id fr..users..." />
-                <marker date="1406693752000" expanded="true" signature="2937:2984" placeholder="SELECT passw..users..." />
+                <marker date="1406694151000" expanded="true" signature="1495:1573" placeholder="INSERT INTO ..." />
+                <marker date="1406694151000" expanded="true" signature="2405:2441" placeholder="SELECT id fr..users..." />
+                <marker date="1406694151000" expanded="true" signature="2935:2982" placeholder="SELECT passw..users..." />
               </folding>
             </state>
           </provider>
@@ -328,7 +328,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/include/DBHandler.php</url>
-          <line>54</line>
+          <line>55</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
@@ -338,16 +338,16 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/include/DBHandler.php</url>
-          <line>266</line>
-          <option name="timeStamp" value="30" />
+          <line>265</line>
+          <option name="timeStamp" value="33" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/include/DBHandler.php</url>
-          <line>248</line>
-          <option name="timeStamp" value="32" />
+          <line>236</line>
+          <option name="timeStamp" value="34" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="33" />
+      <option name="time" value="35" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
@@ -384,9 +384,9 @@
         <state line="136" column="0" selection-start="3403" selection-end="3403" vertical-scroll-proportion="0.0" vertical-offset="2584" max-vertical-offset="2812">
           <folding>
             <element signature="e#6#90#0" expanded="true" />
-            <marker date="1406693752000" expanded="true" signature="1505:1583" placeholder="INSERT INTO ..." />
-            <marker date="1406693752000" expanded="true" signature="2411:2447" placeholder="SELECT id fr..users..." />
-            <marker date="1406693752000" expanded="true" signature="2937:2984" placeholder="SELECT passw..users..." />
+            <marker date="1406694151000" expanded="true" signature="1495:1573" placeholder="INSERT INTO ..." />
+            <marker date="1406694151000" expanded="true" signature="2405:2441" placeholder="SELECT id fr..users..." />
+            <marker date="1406694151000" expanded="true" signature="2935:2982" placeholder="SELECT passw..users..." />
           </folding>
         </state>
       </provider>
@@ -448,12 +448,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/include/DBHandler.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="226" column="19" selection-start="5636" selection-end="5636" vertical-scroll-proportion="-0.62566847" vertical-offset="4645" max-vertical-offset="5206">
+        <state line="244" column="21" selection-start="6423" selection-end="6423" vertical-scroll-proportion="0.0855615" vertical-offset="4588" max-vertical-offset="5149">
           <folding>
             <element signature="e#6#90#0" expanded="true" />
-            <marker date="1406693752000" expanded="true" signature="1505:1583" placeholder="INSERT INTO ..." />
-            <marker date="1406693752000" expanded="true" signature="2411:2447" placeholder="SELECT id fr..users..." />
-            <marker date="1406693752000" expanded="true" signature="2937:2984" placeholder="SELECT passw..users..." />
+            <marker date="1406694151000" expanded="true" signature="1495:1573" placeholder="INSERT INTO ..." />
+            <marker date="1406694151000" expanded="true" signature="2405:2441" placeholder="SELECT id fr..users..." />
+            <marker date="1406694151000" expanded="true" signature="2935:2982" placeholder="SELECT passw..users..." />
           </folding>
         </state>
       </provider>
