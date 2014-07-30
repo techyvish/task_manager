@@ -14,15 +14,15 @@ $user_id = NULL;
 function verifyRequiredParams($required_fields) {
     $error = false;
     $error_fields = "";
-
     $request_params = $_REQUEST;
-
     // Handling PUT request params
+    echo($_REQUEST);
+
+
     if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
         $app = \Slim\Slim::getInstance();
         parse_str($app->request()->getBody(), $request_params);
     }
-
     foreach ($required_fields as $field) {
         if (!isset($request_params[$field]) || strlen(trim($request_params[$field])) <= 0) {
             $error = true;
@@ -110,7 +110,6 @@ $app->post('/register', function() use ($app) {
 });
 
 $app->run();
-
 
 ?>
 
