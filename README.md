@@ -82,5 +82,10 @@ How to setup
 2. Download and add this repo to htdocs folder.
 3. Test APIs using any rest client.
 
+Frameworks
+----------
+
+1. Slim  http://www.slimframework.com/
+2. Medoo http://medoo.in/
 
   [1]: http://www.androidhive.info/wp-content/uploads/2014/01/android-task-manager-rest-api-database.jpg?0921ab

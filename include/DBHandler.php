@@ -223,6 +223,16 @@ class DBHandler {
 
     public function getTask($task_number,$user_id)
     {
+        /*  Query :
+         *  SELECT *
+            FROM `tasks`
+            LEFT JOIN `user_tasks` ON `tasks`.`id` = `user_tasks`.`task_id`
+            WHERE
+ 	            `user_tasks`.`user_id` = 1
+            AND
+ 	        `tasks`.`id` = 1
+         */
+
          $result = $this->database->select("tasks", [
                                                       "[>]user_tasks" => ["id" => "task_id"]],
 
@@ -256,4 +266,4 @@ $handler = new DBHandler();
 //$handler->getUserId("d3de848e17b474ef2965301d3b9ba817");
 //$handler->isValidApiKey("d3de848e17b474ef2965301d3b9ba817");
 //$handler->createTask(1,"Get Milk");
-$handler->getTask(1,1);
+//$handler->getTask(1,1);
