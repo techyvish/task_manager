@@ -191,6 +191,61 @@ class DBHandler {
         }
     }
 
+    public  function createTask($user_id,$task)
+    {
+        $task_id = NULL;
+        $this->database->insert("tasks",
+                                 ["task" => $task]);
+
+        $task_id = $this->database->get("tasks","id",["task"=>$task]);
+
+        if ( $task_id != FALSE )
+        {
+            $name = $this->database->get("users","name",["id"=>$user_id]);
+             if ( $name != FALSE )
+             {
+                 $this->database->insert("user_tasks",
+                                    ["user_id" => $user_id,
+                                     "task_id" => $task_id]);
+                 return $task_id;
+             }
+             else
+             {
+                 return NULL;
+             }
+        }
+        else
+        {
+            var_dump("created task not found");
+            return NULL;
+        }
+    }
+
+    public function getTask($task_number,$user_id)
+    {
+         $result = $this->database->select("tasks", [
+                                                      "[>]user_tasks" => ["id" => "task_id"]],
+
+                                                       ["tasks.id",
+                                                        "tasks.status",
+                                                        "tasks.task",
+                                                        "tasks.created_at"],
+
+                                                        ["AND" =>
+                                                        ["user_tasks.user_id" => 1,
+                                                        "tasks.id" => 1]]);
+
+
+         if ( $result != NULL )
+         {
+             var_dump($result[0]["task"]);
+             return $result[0]["task"];
+         }
+         else
+         {
+            return NULL;
+         }
+    }
 }
 
 $handler = new DBHandler();
@@ -200,3 +255,5 @@ $handler = new DBHandler();
 //$handler->getApiKeyById(1);
 //$handler->getUserId("d3de848e17b474ef2965301d3b9ba817");
 //$handler->isValidApiKey("d3de848e17b474ef2965301d3b9ba817");
+//$handler->createTask(1,"Get Milk");
+$handler->getTask(1,1);
