@@ -122,9 +122,10 @@ class DBHandler
     public function  getUserByEmail($email)
     {
         $name = NULL;
-        $name = $this->database->get("users", "name", ["email" => $email]);
-        if ($name != FALSE) {
-            return $name;
+        $row = $this->database->select("users",[ "name","email","password_hash","api_key","status","created_at"], ["email" => $email]);
+
+        if ($row!= FALSE) {
+            return $row[0];
         } else {
             return NULL;
         }

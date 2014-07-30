@@ -24,6 +24,7 @@ function verifyRequiredParams($required_fields) {
    // echo($_REQUEST);
 
 
+
     if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
         $app = \Slim\Slim::getInstance();
         parse_str($app->request()->getBody(), $request_params);
@@ -42,6 +43,7 @@ function verifyRequiredParams($required_fields) {
         $app = \Slim\Slim::getInstance();
         $response["error"] = true;
         $response["message"] = 'Required field(s) ' . substr($error_fields, 0, -2) . ' is missing or empty';
+        $response["test"] = $required_fields;
         echoRespnse(400, $response);
         $app->stop();
     }
@@ -112,6 +114,50 @@ $app->post('/register', function() use ($app) {
         $response["message"] = "Sorry, this email already existed";
         echoRespnse(200, $response);
     }
+});
+
+
+/**
+ * User Login
+ * url - /login
+ * method - POST
+ * params - email, password
+ */
+
+$app->post('/login',function() use ($app)
+{
+    verifyRequiredParams(array('email','password'));
+
+    $email = $app->request->post('email');
+    $password = $app->request->post('password');
+    $response = array();
+
+    $db = new DBHandler();
+
+    if ( $db-> checkLogin( $email,$password ))
+    {
+        $user = $db->getUserByEmail($email);
+
+        if ( $user != NULL)
+        {
+            $response["error"] = false;
+            $response['name'] = $user['name'];
+            $response['email'] = $user['email'];
+            $response['apiKey'] = $user['api_key'];
+            $response['createdAt'] = $user['created_at'];
+        } else {
+            // unknown error occurred
+            $response['error'] = true;
+            $response['message'] = "An error occurred. Please try again";
+        }
+    } else {
+        // user credentials are wrong
+        $response['error'] = true;
+        $response['message'] = 'Login failed. Incorrect credentials';
+    }
+
+    echoRespnse(200, $response);
+
 });
 
 $app->run();
