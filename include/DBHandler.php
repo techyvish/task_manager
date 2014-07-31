@@ -214,8 +214,7 @@ class DBHandler
 
 
         if ($result != NULL) {
-            var_dump($result[0]["task"]);
-            return $result[0]["task"];
+            return $result[0];
         } else {
             return NULL;
         }
@@ -235,8 +234,7 @@ class DBHandler
                 ["user_tasks.user_id" => $user_id]]);
 
         if ($result != NULL) {
-            var_dump($result[0]);
-            return $result[0];
+            return $result;
         } else {
             return NULL;
         }

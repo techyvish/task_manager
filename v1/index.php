@@ -5,7 +5,6 @@ require '../include/DBHandler.php';
 require '../include/DBConnect.php';
 require '../include/PassHash.php';
 
-
 \Slim\Slim::registerAutoloader();
 
 $app = new \Slim\Slim();
@@ -16,14 +15,12 @@ $user_id = NULL;
 /**
  * Verifying required params posted or not
  */
+
 function verifyRequiredParams($required_fields)
 {
     $error = false;
     $error_fields = "";
     $request_params = $_REQUEST;
-    // Handling PUT request params
-    // echo($_REQUEST);
-
 
     if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
         $app = \Slim\Slim::getInstance();
@@ -52,6 +49,7 @@ function verifyRequiredParams($required_fields)
 /**
  * Validating email address
  */
+
 function validateEmail($email)
 {
     $app = \Slim\Slim::getInstance();
@@ -68,6 +66,7 @@ function validateEmail($email)
  * @param String $status_code Http response code
  * @param Int $response Json response
  */
+
 function echoRespnse($status_code, $response)
 {
     $app = \Slim\Slim::getInstance();
@@ -86,6 +85,7 @@ function echoRespnse($status_code, $response)
  * method - POST
  * params - name, email, password
  */
+
 $app->post('/register', function () use ($app) {
     // check for required params
     verifyRequiredParams(array('name', 'email', 'password'));
@@ -117,7 +117,6 @@ $app->post('/register', function () use ($app) {
         echoRespnse(200, $response);
     }
 });
-
 
 /**
  * User Login
@@ -159,11 +158,11 @@ $app->post('/login', function () use ($app) {
 
 });
 
-
 /**
  * Adding Middle Layer to authenticate every request
  * Checking if the request has valid api key in the 'Authorization' header
  */
+
 function authenticate(\Slim\Route $route)
 {
     // Getting request headers
@@ -206,6 +205,7 @@ function authenticate(\Slim\Route $route)
  * params - name
  * url - /tasks/
  */
+
 $app->post('/tasks', 'authenticate', function () use ($app) {
     // check for required params
     verifyRequiredParams(array('task'));
@@ -228,6 +228,62 @@ $app->post('/tasks', 'authenticate', function () use ($app) {
         $response["message"] = "Failed to create task. Please try again";
     }
     echoRespnse(201, $response);
+});
+
+/**
+ * Listing all tasks of particular user
+ * method GET
+ * url /tasks
+ */
+
+$app->get('/tasks', 'authenticate', function () use ($app) {
+    global $user_id;
+    $response = array();
+    $db = new DBHandler();
+
+    $result = $db->getAllUserTasks($user_id);
+
+    $response['error'] = false;
+    $response['tasks'] = array();
+
+    for ($i = 0; $i < count($result); ++$i) {
+        $tmp = array();
+        $tmp["id"] = $result[$i]["id"];
+        $tmp["task"] = $result[$i]["task"];
+        $tmp["status"] = $result[$i]["status"];
+        $tmp["createdAt"] = $result[$i]["created_at"];
+        array_push($response["tasks"], $tmp);
+    }
+    echoRespnse(200, $response);
+
+});
+
+/**
+ * Listing all tasks of particular user
+ * method GET
+ * url /tasks
+ */
+
+$app->get('/tasks/:id', 'authenticate', function ($task_id) {
+
+    global $user_id;
+    $response = array();
+    $db = new DBHandler();
+
+    $result = $db->getTask($task_id, $user_id);
+    if ($result != NULL) {
+        $response["error"] = false;
+        $response["id"] = $result["id"];
+        $response["task"] = $result["task"];
+        $response["status"] = $result["status"];
+        $response["createdAt"] = $result["created_at"];
+        echoRespnse(200, $response);
+    } else {
+        $response["error"] = true;
+        $response["message"] = "The requested resource doesn't exists";
+        echoRespnse(404, $response);
+    }
+
 });
 
 $app->run();
