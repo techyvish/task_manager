@@ -16,13 +16,13 @@ $user_id = NULL;
 /**
  * Verifying required params posted or not
  */
-function verifyRequiredParams($required_fields) {
+function verifyRequiredParams($required_fields)
+{
     $error = false;
     $error_fields = "";
     $request_params = $_REQUEST;
     // Handling PUT request params
-   // echo($_REQUEST);
-
+    // echo($_REQUEST);
 
 
     if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
@@ -52,7 +52,8 @@ function verifyRequiredParams($required_fields) {
 /**
  * Validating email address
  */
-function validateEmail($email) {
+function validateEmail($email)
+{
     $app = \Slim\Slim::getInstance();
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $response["error"] = true;
@@ -67,7 +68,8 @@ function validateEmail($email) {
  * @param String $status_code Http response code
  * @param Int $response Json response
  */
-function echoRespnse($status_code, $response) {
+function echoRespnse($status_code, $response)
+{
     $app = \Slim\Slim::getInstance();
     // Http response code
     $app->status($status_code);
@@ -84,7 +86,7 @@ function echoRespnse($status_code, $response) {
  * method - POST
  * params - name, email, password
  */
-$app->post('/register', function() use ($app) {
+$app->post('/register', function () use ($app) {
     // check for required params
     verifyRequiredParams(array('name', 'email', 'password'));
 
@@ -124,9 +126,8 @@ $app->post('/register', function() use ($app) {
  * params - email, password
  */
 
-$app->post('/login',function() use ($app)
-{
-    verifyRequiredParams(array('email','password'));
+$app->post('/login', function () use ($app) {
+    verifyRequiredParams(array('email', 'password'));
 
     $email = $app->request->post('email');
     $password = $app->request->post('password');
@@ -134,12 +135,10 @@ $app->post('/login',function() use ($app)
 
     $db = new DBHandler();
 
-    if ( $db-> checkLogin( $email,$password ))
-    {
+    if ($db->checkLogin($email, $password)) {
         $user = $db->getUserByEmail($email);
 
-        if ( $user != NULL)
-        {
+        if ($user != NULL) {
             $response["error"] = false;
             $response['name'] = $user['name'];
             $response['email'] = $user['email'];
@@ -158,6 +157,77 @@ $app->post('/login',function() use ($app)
 
     echoRespnse(200, $response);
 
+});
+
+
+/**
+ * Adding Middle Layer to authenticate every request
+ * Checking if the request has valid api key in the 'Authorization' header
+ */
+function authenticate(\Slim\Route $route)
+{
+    // Getting request headers
+    $headers = apache_request_headers();
+    $response = array();
+    $app = \Slim\Slim::getInstance();
+
+    // Verifying Authorization Header
+    if (isset($headers['Authorization'])) {
+        $db = new DbHandler();
+
+        // get the api key
+        $api_key = $headers['Authorization'];
+        // validating api key
+        if (!$db->isValidApiKey($api_key)) {
+            // api key is not present in users table
+            $response["error"] = true;
+            $response["message"] = "Access Denied. Invalid Api key";
+            echoRespnse(401, $response);
+            $app->stop();
+        } else {
+            global $user_id;
+            // get user primary key id
+            $user = $db->getUserId($api_key);
+            if ($user != NULL)
+                $user_id = $user;
+        }
+    } else {
+        // api key is missing in header
+        $response["error"] = true;
+        $response["message"] = "Api key is misssing";
+        echoRespnse(400, $response);
+        $app->stop();
+    }
+}
+
+/**
+ * Creating new task in db
+ * method POST
+ * params - name
+ * url - /tasks/
+ */
+$app->post('/tasks', 'authenticate', function () use ($app) {
+    // check for required params
+    verifyRequiredParams(array('task'));
+
+    $response = array();
+    $task = $app->request->post('task');
+
+    global $user_id;
+    $db = new DbHandler();
+
+    // creating new task
+    $task_id = $db->createTask($user_id, $task);
+
+    if ($task_id != NULL) {
+        $response["error"] = false;
+        $response["message"] = "Task created successfully";
+        $response["task_id"] = $task_id;
+    } else {
+        $response["error"] = true;
+        $response["message"] = "Failed to create task. Please try again";
+    }
+    echoRespnse(201, $response);
 });
 
 $app->run();
