@@ -283,8 +283,30 @@ $app->get('/tasks/:id', 'authenticate', function ($task_id) {
         $response["message"] = "The requested resource doesn't exists";
         echoRespnse(404, $response);
     }
-
 });
+
+$app->delete('/tasks/:id', 'authenticate', function($task_id){
+
+    global $user_id;
+    $response = array();
+    $db = new DBHandler();
+
+    $result = $db->deleteTask($task_id);
+
+    if ( $result == TRUE)
+    {
+        $response['error'] = false;
+        $response['message'] = "Task deleted successfully";
+    }
+    else
+    {
+        $response['error'] = true;
+        $response['message'] = "error deleting task";
+    }
+
+    echoRespnse(200,$response);
+});
+
 
 $app->run();
 

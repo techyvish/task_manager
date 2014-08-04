@@ -12,16 +12,10 @@ require 'medoo.php';
 class DBHandler
 {
 
-    private $conn;
     private $database;
 
     function __construct()
     {
-        //var_dump(dirname(__FILE__) . '/DBConnect.php');
-        //require_once dirname(__FILE__) . '/DBConnect.php';
-
-        $db = new DbConnect();
-        $this->conn = $db->connect();
 
         $this->database = new medoo([
             // required
@@ -239,6 +233,19 @@ class DBHandler
             return NULL;
         }
     }
+
+    public function deleteTask($task_number)
+    {
+        $result = $this->database->delete("tasks",
+                ["tasks.id" => $task_number ]
+        );
+
+        if ($result == 1) {
+            return TRUE;
+        } else {
+            return FALSE;;
+        }
+    }
 }
 
 //$handler = new DBHandler();
@@ -251,3 +258,4 @@ class DBHandler
 //$handler->createTask(1,"Get Milk");
 //$handler->getTask(1,1);
 //$handler->getAllUserTasks(1);
+//$handler->deleteTask(2);
